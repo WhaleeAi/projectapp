@@ -27,7 +27,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   $stmt->execute([$user['user_id']]);
   $u = $stmt->fetch();
 
-  if (!$u || (int)$u['is_active'] === 0) {
+  if (!$u || !db_flag_is_true($u['is_active'] ?? null)) {
     flash_set('error', 'Вы заблокированы. Обратитесь к администратору');
     header('Location: login.php');
     exit;

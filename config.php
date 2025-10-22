@@ -44,6 +44,21 @@ function flash_get(string $type): ?string {
   return null;
 }
 
+function db_flag_is_true($value): bool {
+  if (is_bool($value)) {
+    return $value;
+  }
+  if (is_int($value)) {
+    return $value === 1;
+  }
+  if (is_string($value)) {
+    $normalized = strtolower(trim($value));
+    return !in_array($normalized, ['0', 'false', 'no', 'n'], true);
+  }
+  return (bool)$value;
+}
+
+
 // Требовать авторизацию
 function require_login(): void {
   if (empty($_SESSION['user'])) {

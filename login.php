@@ -26,9 +26,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   }
 
   // Проверка блокировки по неактивности (>=1 месяц)
-  $last = $u['last_login_date'] ?? $u['created_date'];
-  if ($last && strtotime($last) < strtotime('-1 month')) {
-    // Блокируем
+  $lastLoginRaw = $u['last_login_date'] ?? null;
+  $createdRaw   = $u['created_date'] ?? null;
+  $lastTs    = $lastLoginRaw ? strtotime($lastLoginRaw) : false;
+  $createdTs = $createdRaw ? strtotime($createdRaw) : false;
+  $monthAgoTs = strtotime('-1 month');
+
+  if (($lastTs !== false && $lastTs < $monthAgoTs) ||
+      ($lastTs === false && $createdTs !== false && $createdTs < $monthAgoTs)) {
     $pdo->prepare('UPDATE `user` SET is_active=0, locked_at=NOW(), locked_reason="INACTIVE" WHERE user_id=?')
         ->execute([$u['user_id']]);
     flash_set('error', 'Вы заблокированы. Обратитесь к администратору');
@@ -36,33 +41,74 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     exit;
   }
 
-  if ((int)$u['is_active'] === 0) {
+  if (!db_flag_is_true($u['is_active'] ?? null)) {
     flash_set('error', 'Вы заблокированы. Обратитесь к администратору');
     header('Location: login.php');
     exit;
   }
 
-  // Проверка пароля: приоритет salt+hash; если их нет — сравниваем со старым plaintext (если ещё есть)
-  $ok = false;
-  if (!empty($u['password_salt']) && !empty($u['password_hash'])) {
-    $hash = password_hash_with_salt($password, $u['password_salt']);
-    $ok = hash_equals($u['password_hash'], $hash);
+  // $u — строка из БД с полями password_salt, password_hash, password
+
+function norm_bin($v) {
+  if ($v === null) return null;
+  // Если пришла hex-строка — превратим в бинарь
+  if (preg_match('/^[0-9a-fA-F]+$/', $v) && (strlen($v) % 2 === 0)) {
+    return hex2bin($v);
+  }
+  return $v; // уже бинарь
+}
+
+function h512_hexsalt($salt_bin, $password) {
+  $hexSalt = bin2hex($salt_bin);                 // HEX(salt)
+  return hex2bin(hash('sha512', $hexSalt.$password)); // бинарный 64 байта
+}
+function h512_binsalt($salt_bin, $password) {
+  // SHA512( (binary)salt || password ), бинарный вывод:
+  $ctx = hash_init('sha512');
+  hash_update($ctx, $salt_bin);
+  hash_update($ctx, $password);
+  return hex2bin(hash_final($ctx));
+}
+
+$db_salt = norm_bin($u['password_salt'] ?? null);
+$db_hash = norm_bin($u['password_hash'] ?? null);
+$db_plain= $u['password'] ?? null;
+
+$ok = false;
+
+// Попробуем 2 стратегии хеширования, если в БД есть соль и хеш
+if ($db_salt !== null && $db_hash !== null) {
+  // Вариант A: SHA512(HEX(salt) || password)
+  $calcA = h512_hexsalt($db_salt, $password);
+  if (hash_equals($db_hash, $calcA)) {
+    $ok = true;
   } else {
-    // Переходный период — сравнение со старым plaintext (если есть)
-    if (isset($u['password']) && $u['password'] !== null) {
-      $ok = hash_equals($u['password'], $password);
-      if ($ok) {
-        // Переводим на соль+хеш
-        $salt = random_salt();
-        $hash = password_hash_with_salt($password, $salt);
-        $q = $pdo->prepare('UPDATE `user` SET password_salt=?, password_hash=? WHERE user_id=?');
-        $q->execute([$salt, $hash, $u['user_id']]);
-        // Обновим в $u, чтобы дальше использовать
-        $u['password_salt'] = $salt;
-        $u['password_hash'] = $hash;
-      }
+    // Вариант B: SHA512((binary)salt || password)
+    $calcB = h512_binsalt($db_salt, $password);
+    if (hash_equals($db_hash, $calcB)) {
+      $ok = true;
     }
   }
+}
+
+// Переходный fallback: если в БД ещё есть plaintext
+if (!$ok && $db_plain !== null) {
+  if (hash_equals($db_plain, $password)) {
+    $ok = true;
+    // Можно сразу перевести на соль+хеш по единому варианту (A), чтобы унифицировать:
+    // Генерируем соль из UUID (MariaDB-совместимо)
+    $salt = bin2hex(random_bytes(16)); // hex на 32 символа
+    $salt_bin = hex2bin($salt);
+    $hash_bin = h512_hexsalt($salt_bin, $password);
+    $q = $pdo->prepare('UPDATE `user` SET password_salt=?, password_hash=?, password_changed=1 WHERE user_id=?');
+    $q->execute([$salt_bin, $hash_bin, $u['user_id']]);
+    $u['password_salt'] = $salt_bin;
+    $u['password_hash'] = $hash_bin;
+  }
+}
+
+// --- дальше твоя логика: if (!$ok) { ошибка } else { успех } ---
+
 
   if (!$ok) {
     // инкремент попыток и возможная блокировка
@@ -96,7 +142,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   if ((int)$u['password_changed'] === 0) {
     // Требуется смена пароля
     flash_set('info', 'Вы успешно авторизовались. Требуется сменить пароль.');
-    header('Location: /change_password.php');
+    header('Location: change_password.php');
     exit;
   }
 
