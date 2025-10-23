@@ -1,9 +1,10 @@
-/* Глобальные переменные (через -fx-*) */
+/* Базовые настройки */
 .root {
   -fx-font-family: "Segoe UI", "Inter", "Roboto", "Arial";
   -fx-font-size: 13px;
-  -fx-text-fill: #1f2937; /* gray-800 */
+  -fx-text-fill: #1f2937;            /* gray-800 */
   -fx-base: #ffffff;
+  -fx-background-color: #ffffff;
 }
 
 /* Контейнеры */
@@ -12,62 +13,55 @@
   -fx-spacing: 12;
 }
 
-/* Заголовки */
-.h1 {
-  -fx-font-size: 18px;
-  -fx-font-weight: bold;
-}
-.h2 {
-  -fx-font-size: 16px;
-  -fx-font-weight: bold;
-}
-
-/* Карточка */
-.card {
+/* Карточки и панели */
+.card, .panel, .admin-left, .admin-right {
   -fx-background-color: #ffffff;
   -fx-background-radius: 12;
   -fx-padding: 16;
-  -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.06), 8, 0.2, 0, 2);
-  -fx-border-color: #e5e7eb; /* gray-200 */
+  -fx-border-color: #e5e7eb;         /* gray-200 */
   -fx-border-radius: 12;
 }
 
-/* Кнопки по умолчанию */
+/* Заголовки */
+.h1 { -fx-font-size: 18px; -fx-font-weight: 800; }
+.h2 { -fx-font-size: 16px; -fx-font-weight: 700; }
+
+/* Кнопки (единая высота/вид) */
 .button {
   -fx-background-radius: 10;
-  -fx-padding: 8 14 8 14;
+  -fx-padding: 0 14 0 14;            /* вертикальные отступы не нужны при фикс. высоте */
+  -fx-min-height: 34px;
+  -fx-pref-height: 34px;
   -fx-font-weight: 600;
   -fx-background-color: linear-gradient(to bottom, #3b82f6, #2563eb);
   -fx-text-fill: white;
   -fx-cursor: hand;
 }
-.button:hover {
-  -fx-background-color: linear-gradient(to bottom, #60a5fa, #3b82f6);
-}
-.button:pressed {
-  -fx-background-color: #1d4ed8;
-}
+.button:hover { -fx-background-color: linear-gradient(to bottom, #60a5fa, #3b82f6); }
+.button:pressed { -fx-background-color: #1d4ed8; }
 
 /* Вторичные кнопки */
 .button-secondary {
-  -fx-background-color: #f3f4f6; /* gray-100 */
-  -fx-text-fill: #111827;        /* gray-900 */
-}
-.button-secondary:hover {
-  -fx-background-color: #e5e7eb; /* gray-200 */
+  -fx-background-color: #f3f4f6;
+  -fx-text-fill: #111827;
+  -fx-background-radius: 10;
+  -fx-min-height: 34px;
+  -fx-pref-height: 34px;
 }
 
-/* Поля ввода */
-.text-field, .password-field, .combo-box, .check-box {
+/* Поля ввода: единая высота 34px */
+.text-field, .password-field, .combo-box-base, .combo-box, .check-box {
   -fx-background-radius: 8;
 }
-.text-field, .password-field, .combo-box {
+.text-field, .password-field, .combo-box-base {
   -fx-background-color: #ffffff;
-  -fx-border-color: #d1d5db; /* gray-300 */
+  -fx-border-color: #d1d5db;         /* gray-300 */
   -fx-border-radius: 8;
-  -fx-padding: 8 10 8 10;
+  -fx-min-height: 34px;
+  -fx-pref-height: 34px;
+  -fx-padding: 0 10 0 10;
 }
-.text-field:focused, .password-field:focused, .combo-box:focused {
+.text-field:focused, .password-field:focused, .combo-box-base:focused {
   -fx-border-color: #3b82f6;
   -fx-effect: dropshadow(gaussian, rgba(59,130,246,0.25), 6, 0.2, 0, 0);
 }
@@ -77,25 +71,26 @@
 .msg-error   { -fx-text-fill: #dc2626; }
 .msg-success { -fx-text-fill: #16a34a; }
 
-/* Таблица */
+/* Таблица: те же размеры, что и в dark.css */
 .table-view {
   -fx-background-radius: 12;
   -fx-border-color: #e5e7eb;
   -fx-border-radius: 12;
+
+  /* ключ: фиксированная высота строк */
+  -fx-cell-size: 28px;               /* равна setFixedCellSize(28) из кода, но через CSS */
 }
 .table-view .column-header-background {
-  -fx-background-color: #f9fafb; /* gray-50 */
+  -fx-background-color: #f9fafb;     /* gray-50 */
+}
+.table-view .column-header, .table-view .filler {
+  /* высота хедера через паддинги, чтобы совпало с тёмной темой */
+  -fx-padding: 4 6 4 6;
 }
 .table-row-cell:filled:selected, .table-cell:filled:selected {
-  -fx-background-color: #dbeafe;  /* blue-100 */
+  -fx-background-color: #dbeafe;     /* blue-100 */
   -fx-text-fill: #111827;
 }
 
-/* Панели */
-.panel {
-  -fx-background-color: #f9fafb;
-  -fx-border-color: #e5e7eb;
-  -fx-border-radius: 12;
-  -fx-background-radius: 12;
-  -fx-padding: 12;
-}
+/* Чекбоксы и комбобоксы */
+.check-box, .combo-box { -fx-text-fill: #111827; }

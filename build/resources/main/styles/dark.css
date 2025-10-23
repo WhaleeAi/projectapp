@@ -1,0 +1,95 @@
+/* БАЗА: идентичные размерности, как в светлой теме (чтобы при переключении менялся только цвет) */
+.root {
+  -fx-font-family: "Segoe UI", "Inter", "Roboto", "Arial";
+  -fx-font-size: 13px;
+  -fx-text-fill: #f3f4f6; /* светлый текст для тёмной темы */
+  -fx-base: #0f172a;     /* slate-900 */
+  -fx-background-color: #0f172a;
+}
+
+/* Контейнеры: одинаковые отступы и расстояния */
+.container {
+  -fx-padding: 24;
+  -fx-spacing: 12;
+}
+
+/* Карточки и панели: одинаковые радиусы/паддинги/бордеры, ТОЛЬКО другие цвета */
+.card, .panel, .admin-left, .admin-right {
+  -fx-background-color: #1e293b; /* slate-800 */
+  -fx-background-radius: 12;
+  -fx-padding: 16;
+  -fx-border-color: #334155;     /* slate-700 */
+  -fx-border-radius: 12;
+}
+
+/* Заголовки: одинаковая типографика, другой цвет */
+.h1, .h2 {
+  -fx-text-fill: #f8fafc;
+  -fx-font-weight: bold;
+}
+
+/* КНОПКИ: те же высоты/радиусы, меняем только цвета */
+.button {
+  -fx-background-radius: 10;
+  -fx-padding: 0 14 0 14;   /* как в app.css */
+  -fx-min-height: 34px;     /* как в app.css */
+  -fx-pref-height: 34px;    /* как в app.css */
+  -fx-font-weight: 600;
+  -fx-background-color: linear-gradient(to bottom, #2563eb, #1e40af);
+  -fx-text-fill: white;
+  -fx-cursor: hand;
+}
+.button:hover { -fx-background-color: linear-gradient(to bottom, #3b82f6, #2563eb); }
+.button:pressed { -fx-background-color: #1d4ed8; }
+
+.button-secondary {
+  -fx-background-color: #334155;
+  -fx-text-fill: #f1f5f9;
+  -fx-background-radius: 10;
+  -fx-min-height: 34px;   /* как в app.css */
+  -fx-pref-height: 34px;  /* как в app.css */
+}
+
+/* ПОЛЯ ВВОДА: те же высоты/паддинги, другие цвета */
+.text-field, .password-field, .combo-box-base, .combo-box, .check-box {
+  -fx-background-radius: 8;
+}
+.text-field, .password-field, .combo-box-base {
+  -fx-background-color: #1e293b;
+  -fx-text-fill: #f1f5f9;
+  -fx-border-color: #475569;
+  -fx-border-radius: 8;
+  -fx-min-height: 34px;   /* как в app.css */
+  -fx-pref-height: 34px;  /* как в app.css */
+  -fx-padding: 0 10 0 10; /* как в app.css */
+  -fx-prompt-text-fill: #94a3b8;
+}
+.text-field:focused, .password-field:focused, .combo-box-base:focused {
+  -fx-border-color: #3b82f6;
+  -fx-effect: dropshadow(gaussian, rgba(59,130,246,0.3), 6, 0.2, 0, 0);
+}
+
+/* СООБЩЕНИЯ: только цвета */
+.msg-info    { -fx-text-fill: #38bdf8; }
+.msg-error   { -fx-text-fill: #f87171; }
+.msg-success { -fx-text-fill: #4ade80; }
+
+/* ТАБЛИЦА: такая же геометрия, как в светлой теме (cell-size и padding заголовков такие же), меняем только цвета */
+.table-view {
+  -fx-background-color: #1e293b;
+  -fx-border-color: #334155;
+  -fx-border-radius: 12;
+
+  -fx-cell-size: 28px;  /* как в app.css/admin.css */
+}
+.table-view .column-header-background { -fx-background-color: #1e293b; }
+.table-view .column-header, .table-view .filler { -fx-padding: 4 6 4 6; } /* как в app.css/admin.css */
+
+.table-row-cell { -fx-background-color: #1e293b; }
+.table-row-cell:filled:selected, .table-cell:filled:selected {
+  -fx-background-color: #2563eb;
+  -fx-text-fill: #f8fafc;
+}
+
+/* Чекбокс/комбобокс — только цвет текста */
+.check-box, .combo-box { -fx-text-fill: #f8fafc; }

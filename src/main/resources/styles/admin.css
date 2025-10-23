@@ -1,26 +1,97 @@
+/* ====== ОБЩЕЕ ДЛЯ СТРАНИЦЫ АДМИНА — ТОЛЬКО РАЗМЕРЫ/ОТСТУПЫ (НЕ ЦВЕТА) ====== */
+
+/* Верхняя полоса (приветствие + Выход + Переключатель темы) */
 .main-top {
+  /* одинаковые отступы и геометрия для любой темы */
   -fx-padding: 8 12 12 12;
   -fx-spacing: 12;
   -fx-alignment: center-left;
+
+  /* фиксируем высоту панели */
+  -fx-min-height: 52px;
+  -fx-pref-height: 52px;
+  -fx-max-height: 52px;
 }
 
-.admin-left, .admin-right {
-  -fx-background-color: #f9fafb;
-  -fx-border-color: #e5e7eb;
+/* Текст приветствия внутри top-bar: переопределим h2 под компактный размер */
+.main-top .h2,
+.main-top .label {
+  -fx-font-size: 18px;  /* одинаково в обеих темах */
+  -fx-font-weight: 700;
+  -fx-padding: 0;       /* убираем лишние внутренние отступы */
+}
+
+/* Кнопки в top-bar — одинаковая высота/паддинги */
+.main-top .button,
+.main-top .toggle-button {
+  -fx-min-height: 34px;
+  -fx-pref-height: 34px;
+  -fx-max-height: 34px;
+  -fx-padding: 0 14 0 14;  /* горизонтальный внутренний отступ */
+  -fx-background-radius: 10;
+}
+
+/* Если у кнопки есть иконки/эмодзи — выравниваем по центру */
+.main-top .button > .graphic,
+.main-top .toggle-button > .graphic {
+  -fx-padding: 0 6 0 0;
+}
+
+/* Отступ снизу у панели поиска в админке */
+.panel, .main-top {
+  -fx-padding: 8 12 12 12;
+
+  -fx-alignment: center-left;
+  -fx-min-height: 72px;
+  -fx-pref-height: 72px;
+  -fx-max-height: 72px;
+
+  /* вот ключевая строка — создаёт "воздух" между панелью поиска и таблицей */
+  -fx-background-insets: 0 0 12 0;  /* внутренний отступ */
+  -fx-border-insets: 0 0 12 0;      /* чтобы не прилипало с таблицей */
+}
+
+/* ====== Боковые панели слева/справа (размеры неизменные между темами) ====== */
+.admin-left,
+.admin-right {
+  -fx-padding: 12;
   -fx-border-radius: 12;
   -fx-background-radius: 12;
-  -fx-padding: 12;
+
+  /* фикс ширина, чтобы не "прыгало" между темами */
+  -fx-pref-width: 320px;
+  -fx-min-width: 320px;
+  -fx-max-width: 320px;
 }
 
-.admin-left  { -fx-pref-width: 320; }
-.admin-right { -fx-pref-width: 320; }
-
+/* Заголовки секций слева/справа — компактные и одинаковые */
 .admin-section-title {
+  -fx-font-size: 14px;
   -fx-font-weight: 700;
   -fx-padding: 0 0 8 0;
 }
 
+/* Сообщение внизу — единый размер шрифта и отступы */
 .admin-msg {
-  -fx-padding: 8 0 0 0;
+  -fx-padding: 8 12 8 12;
   -fx-font-size: 12px;
 }
+
+/* Таблица: одинаковая геометрия строк/заголовков между темами */
+.table-view {
+  -fx-border-radius: 12;
+  -fx-background-radius: 12;
+
+  /* высота строки таблицы — фиксированная */
+  -fx-cell-size: 28px;
+}
+
+/* высота заголовка через паддинг — одинаково в обеих темах */
+.table-view .column-header,
+.table-view .filler {
+  -fx-padding: 4 6 4 6;
+}
+
+/* ====== НЕ МЕНЯЕМ ЦВЕТА ЗДЕСЬ ======
+   Цвета фона/текста/границ берутся из app.css (светлая) и dark.css (тёмная).
+   Здесь только размеры/паддинги, чтобы при смене темы "гулял" ТОЛЬКО цвет. */

@@ -3,7 +3,9 @@ package app.view;
 import app.model.User;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -28,7 +30,11 @@ public class MainView extends BorderPane {
 
         Button logout = new Button("Выход");
         logout.getStyleClass().add("button-secondary");
-        logout.setOnAction(e -> stage.setScene(new javafx.scene.Scene(new LoginView(stage), 520, 420)));
+        logout.setOnAction(e -> {
+            javafx.scene.Scene s = new javafx.scene.Scene(new LoginView(stage), 520, 420);
+            app.MainApp.applyGlobalStyles(s);             // ← добавили
+            stage.setScene(s);
+        });
 
         top.getChildren().addAll(hello, logout);
         setTop(top);
@@ -47,6 +53,24 @@ public class MainView extends BorderPane {
         getStylesheets().add(
                 getClass().getResource("/styles/admin.css").toExternalForm()
         );
+
+        Button themeToggle = new Button("🌙");
+        themeToggle.setOnAction(e -> {
+            Scene scene = stage.getScene();
+            stage.getIcons().add(
+                    new Image(getClass().getResourceAsStream("/icons/logo.png"))
+            );
+            scene.getStylesheets().clear();
+            String current = themeToggle.getText();
+            if ("🌙".equals(current)) {
+                scene.getStylesheets().add(getClass().getResource("/styles/dark.css").toExternalForm());
+                themeToggle.setText("🌞");
+            } else {
+                scene.getStylesheets().add(getClass().getResource("/styles/app.css").toExternalForm());
+                themeToggle.setText("🌙");
+            }
+        });
+        top.getChildren().add(themeToggle);
     }
 
     private boolean isAdmin(String role) {
@@ -54,4 +78,5 @@ public class MainView extends BorderPane {
         String r = role.trim().toLowerCase();
         return r.contains("admin") || r.contains("администратор");
     }
+
 }

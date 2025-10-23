@@ -4,6 +4,7 @@ import app.model.User;
 import app.service.AuthService;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
@@ -16,11 +17,17 @@ public class LoginView extends VBox {
     private static final String MSG_BLOCKED = "Вы заблокированы. Обратитесь к администратору";
     private static final String MSG_SUCCESS = "Вы успешно авторизовались";
 
-    // ... package/imports
     public LoginView(Stage stage) {
         this.stage = stage;
 
-        getStyleClass().addAll("container", "login-root");
+        // --- ВАЖНО: не растягивать детей по ширине
+        setFillWidth(false);                       // ⟵ ключевая строка
+        setPadding(new Insets(24));
+        setSpacing(12);
+        setAlignment(Pos.CENTER);
+
+        // стили экрана логина
+        getStylesheets().add(getClass().getResource("/styles/login.css").toExternalForm());
 
         Label title = new Label("Вход в систему");
         title.getStyleClass().addAll("h1", "login-title");
@@ -38,18 +45,20 @@ public class LoginView extends VBox {
         status.getStyleClass().addAll("login-status", "msg-info");
         status.setWrapText(true);
 
+        // --- ограничиваем максимальную ширину элементов (не будут тянуться)
+        int fieldMax = 320;                        // можно подправить под дизайн
+        login.setMaxWidth(fieldMax);
+        pass.setMaxWidth(fieldMax);
+        btn.setMaxWidth(fieldMax);
+
         VBox card = new VBox(10, title, login, pass, btn, status);
         card.getStyleClass().addAll("card", "login-card");
+        card.setAlignment(Pos.CENTER);
+        card.setMaxWidth(420);                     // ⟵ ширина карточки-формы
+        // (необязательно, но можно задать и prefWidth)
+        // card.setPrefWidth(420);
 
-        setPadding(new Insets(24));
-        setSpacing(12);
-        setAlignment(Pos.CENTER);
         getChildren().add(card);
-
-        // Подключаем login.css
-        getStylesheets().add(
-                getClass().getResource("/styles/login.css").toExternalForm()
-        );
 
         btn.setDefaultButton(true);
         btn.setOnAction(e -> {
@@ -63,8 +72,6 @@ public class LoginView extends VBox {
                 }
 
                 AuthService.AuthResult res = auth.login(lg, pw);
-
-                // Нормализуем отображаемые сообщения по ТЗ
                 String normalizedMsg;
                 if (res == null || res.status == null) {
                     normalizedMsg = "Ошибка: не удалось выполнить авторизацию (нет ответа).";
@@ -84,26 +91,26 @@ public class LoginView extends VBox {
 
                 status.setText(normalizedMsg);
 
-                // Переходы по результатам
                 if (res != null) {
                     if ("PASSWORD_CHANGE_REQUIRED".equalsIgnoreCase(res.status) && res.user != null) {
                         new Alert(Alert.AlertType.INFORMATION, "Требуется смена пароля").showAndWait();
-                        stage.setScene(new javafx.scene.Scene(new PasswordChangeView(stage, res.user), 520, 400));
+                        Scene s = new Scene(new PasswordChangeView(stage, res.user), 520, 400);
+                        app.MainApp.applyGlobalStyles(s);
+                        stage.setScene(s);
                         return;
                     }
                     if (isSuccess(res.status) && res.user != null && !res.user.isPasswordChangeRequired()) {
                         new Alert(Alert.AlertType.INFORMATION, MSG_SUCCESS).showAndWait();
-                        stage.setScene(new javafx.scene.Scene(new MainView(stage, res.user), 920, 600));
+                        Scene s = new Scene(new MainView(stage, res.user), 920, 600);
+                        app.MainApp.applyGlobalStyles(s);
+                        stage.setScene(s);
                     }
                 }
-
             } catch (Throwable t) {
                 t.printStackTrace();
                 new Alert(Alert.AlertType.ERROR, "Ошибка при входе: " + t.getMessage()).showAndWait();
             }
         });
-
-        getChildren().addAll(title, login, pass, btn, status);
     }
 
     private boolean isInvalid(String status) {
@@ -115,7 +122,7 @@ public class LoginView extends VBox {
     private boolean isLocked(String status) {
         if (status == null) return false;
         String s = status.toUpperCase();
-        return s.contains("LOCK") || s.contains("BLOCK"); // LOCKED, BLOCKED, ACCOUNT_LOCKED, INACTIVE_30DAYS, etc.
+        return s.contains("LOCK") || s.contains("BLOCK");
     }
 
     private boolean isSuccess(String status) {

@@ -51,7 +51,9 @@ public class PasswordChangeView extends VBox {
 
             if (msg != null && msg.toUpperCase().startsWith("SUCCESS")) {
                 new Alert(Alert.AlertType.INFORMATION, "Пароль успешно изменён").showAndWait();
-                stage.setScene(new javafx.scene.Scene(new MainView(stage, user), 920, 600));
+                javafx.scene.Scene s = new javafx.scene.Scene(new MainView(stage, user), 920, 600);
+                app.MainApp.applyGlobalStyles(s);             // ← добавили
+                stage.setScene(s);
             } else if (msg != null && msg.toUpperCase().contains("INVALID_CURRENT")) {
                 new Alert(Alert.AlertType.ERROR, "Текущий пароль введён неверно.").showAndWait();
             }
