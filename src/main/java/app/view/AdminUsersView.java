@@ -35,12 +35,20 @@ public class AdminUsersView extends BorderPane {
     public AdminUsersView() {
         setPadding(new Insets(12));
 
+        // ↓↓↓ Подключаем admin.css (добавлено)
+        getStylesheets().add(
+                getClass().getResource("/styles/admin.css").toExternalForm()
+        );
+
         // top: поиск и обновить
         search.setPromptText("Поиск по логину/имени/фамилии");
         Button refresh = new Button("Обновить");
         refresh.setOnAction(e -> reload());
         HBox top = new HBox(8, search, refresh);
         top.setAlignment(Pos.CENTER_LEFT);
+        // ↓↓↓ класс панели + вторичная кнопка (добавлено)
+        top.getStyleClass().add("panel");
+        refresh.getStyleClass().add("button-secondary");
         setTop(top);
 
         // center: таблица
@@ -77,6 +85,8 @@ public class AdminUsersView extends BorderPane {
         cReason.setPrefWidth(180);
 
         table.getColumns().addAll(cId, cLogin, cFN, cLN, cRole, cActive, cAttempts, cReason);
+        // ↓↓↓ стиль таблицы (добавлено)
+        table.getStyleClass().add("table-view");
         setCenter(table);
 
         // left: добавление
@@ -98,6 +108,8 @@ public class AdminUsersView extends BorderPane {
         left.setPadding(new Insets(8));
         left.setPrefWidth(300);
         left.setStyle("-fx-background-color: rgba(0,0,0,0.02); -fx-border-color: #ddd;");
+        // ↓↓↓ класс панели слева (добавлено)
+        left.getStyleClass().add("admin-left");
         setLeft(left);
 
         // right: редактирование выбранного
@@ -120,10 +132,14 @@ public class AdminUsersView extends BorderPane {
         right.setPadding(new Insets(8));
         right.setPrefWidth(300);
         right.setStyle("-fx-background-color: rgba(0,0,0,0.02); -fx-border-color: #ddd;");
+        // ↓↓↓ класс панели справа (добавлено)
+        right.getStyleClass().add("admin-right");
         setRight(right);
 
         // bottom: сообщения
         msg.setWrapText(true);
+        // ↓↓↓ стили сообщений (добавлено)
+        msg.getStyleClass().addAll("admin-msg", "msg-info");
         setBottom(msg);
 
         // реакция на выбор в таблице

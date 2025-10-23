@@ -1,0 +1,18 @@
+.login-root {
+  -fx-alignment: center;
+}
+
+.login-card {
+  -fx-min-width: 360;
+  -fx-max-width: 420;
+}
+
+.login-title {
+  -fx-font-size: 20px;
+  -fx-font-weight: 800;
+  -fx-padding: 0 0 8 0;
+}
+
+.login-status {
+  -fx-padding: 8 0 0 0;
+}

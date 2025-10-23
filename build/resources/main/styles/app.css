@@ -1,0 +1,101 @@
+/* Глобальные переменные (через -fx-*) */
+.root {
+  -fx-font-family: "Segoe UI", "Inter", "Roboto", "Arial";
+  -fx-font-size: 13px;
+  -fx-text-fill: #1f2937; /* gray-800 */
+  -fx-base: #ffffff;
+}
+
+/* Контейнеры */
+.container {
+  -fx-padding: 24;
+  -fx-spacing: 12;
+}
+
+/* Заголовки */
+.h1 {
+  -fx-font-size: 18px;
+  -fx-font-weight: bold;
+}
+.h2 {
+  -fx-font-size: 16px;
+  -fx-font-weight: bold;
+}
+
+/* Карточка */
+.card {
+  -fx-background-color: #ffffff;
+  -fx-background-radius: 12;
+  -fx-padding: 16;
+  -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.06), 8, 0.2, 0, 2);
+  -fx-border-color: #e5e7eb; /* gray-200 */
+  -fx-border-radius: 12;
+}
+
+/* Кнопки по умолчанию */
+.button {
+  -fx-background-radius: 10;
+  -fx-padding: 8 14 8 14;
+  -fx-font-weight: 600;
+  -fx-background-color: linear-gradient(to bottom, #3b82f6, #2563eb);
+  -fx-text-fill: white;
+  -fx-cursor: hand;
+}
+.button:hover {
+  -fx-background-color: linear-gradient(to bottom, #60a5fa, #3b82f6);
+}
+.button:pressed {
+  -fx-background-color: #1d4ed8;
+}
+
+/* Вторичные кнопки */
+.button-secondary {
+  -fx-background-color: #f3f4f6; /* gray-100 */
+  -fx-text-fill: #111827;        /* gray-900 */
+}
+.button-secondary:hover {
+  -fx-background-color: #e5e7eb; /* gray-200 */
+}
+
+/* Поля ввода */
+.text-field, .password-field, .combo-box, .check-box {
+  -fx-background-radius: 8;
+}
+.text-field, .password-field, .combo-box {
+  -fx-background-color: #ffffff;
+  -fx-border-color: #d1d5db; /* gray-300 */
+  -fx-border-radius: 8;
+  -fx-padding: 8 10 8 10;
+}
+.text-field:focused, .password-field:focused, .combo-box:focused {
+  -fx-border-color: #3b82f6;
+  -fx-effect: dropshadow(gaussian, rgba(59,130,246,0.25), 6, 0.2, 0, 0);
+}
+
+/* Сообщения */
+.msg-info    { -fx-text-fill: #2563eb; }
+.msg-error   { -fx-text-fill: #dc2626; }
+.msg-success { -fx-text-fill: #16a34a; }
+
+/* Таблица */
+.table-view {
+  -fx-background-radius: 12;
+  -fx-border-color: #e5e7eb;
+  -fx-border-radius: 12;
+}
+.table-view .column-header-background {
+  -fx-background-color: #f9fafb; /* gray-50 */
+}
+.table-row-cell:filled:selected, .table-cell:filled:selected {
+  -fx-background-color: #dbeafe;  /* blue-100 */
+  -fx-text-fill: #111827;
+}
+
+/* Панели */
+.panel {
+  -fx-background-color: #f9fafb;
+  -fx-border-color: #e5e7eb;
+  -fx-border-radius: 12;
+  -fx-background-radius: 12;
+  -fx-padding: 12;
+}

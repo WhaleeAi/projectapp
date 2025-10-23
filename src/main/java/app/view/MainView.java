@@ -16,30 +16,37 @@ public class MainView extends BorderPane {
         this.user = user;
         setPadding(new Insets(16));
 
+        HBox top = new HBox(16);
+        top.getStyleClass().add("main-top");
+
         Label hello = new Label(
                 "Здравствуйте, " +
                         (user.getDisplayName().isBlank() ? user.getLogin() : user.getDisplayName()) +
                         " | Роль: " + user.getAuthRole()
         );
-        hello.setStyle("-fx-font-size: 14px; -fx-font-weight: bold;");
+        hello.getStyleClass().add("h2");
 
         Button logout = new Button("Выход");
-        logout.setOnAction(e -> stage.setScene(new javafx.scene.Scene(new LoginView(stage), 480, 360)));
+        logout.getStyleClass().add("button-secondary");
+        logout.setOnAction(e -> stage.setScene(new javafx.scene.Scene(new LoginView(stage), 520, 420)));
 
-        HBox top = new HBox(16, hello, logout);
-        top.setAlignment(Pos.CENTER_LEFT);
+        top.getChildren().addAll(hello, logout);
         setTop(top);
 
         if (isAdmin(user.getAuthRole())) {
-            // Панель администратора: управление пользователями
-            setCenter(new AdminUsersView());
+            AdminUsersView admin = new AdminUsersView();
+            setCenter(admin);
         } else {
-            // Обычный пользователь — заглушка
             VBox center = new VBox(12);
-            center.setPadding(new Insets(12));
+            center.getStyleClass().addAll("container", "card");
             center.getChildren().add(new Label("Добро пожаловать! Здесь появится рабочий стол пользователя."));
             setCenter(center);
         }
+
+        // Подключаем admin.css
+        getStylesheets().add(
+                getClass().getResource("/styles/admin.css").toExternalForm()
+        );
     }
 
     private boolean isAdmin(String role) {

@@ -1,0 +1,26 @@
+.main-top {
+  -fx-padding: 8 12 12 12;
+  -fx-spacing: 12;
+  -fx-alignment: center-left;
+}
+
+.admin-left, .admin-right {
+  -fx-background-color: #f9fafb;
+  -fx-border-color: #e5e7eb;
+  -fx-border-radius: 12;
+  -fx-background-radius: 12;
+  -fx-padding: 12;
+}
+
+.admin-left  { -fx-pref-width: 320; }
+.admin-right { -fx-pref-width: 320; }
+
+.admin-section-title {
+  -fx-font-weight: 700;
+  -fx-padding: 0 0 8 0;
+}
+
+.admin-msg {
+  -fx-padding: 8 0 0 0;
+  -fx-font-size: 12px;
+}

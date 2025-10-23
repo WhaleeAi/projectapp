@@ -16,24 +16,40 @@ public class LoginView extends VBox {
     private static final String MSG_BLOCKED = "Вы заблокированы. Обратитесь к администратору";
     private static final String MSG_SUCCESS = "Вы успешно авторизовались";
 
+    // ... package/imports
     public LoginView(Stage stage) {
         this.stage = stage;
-        setPadding(new Insets(24));
-        setSpacing(12);
-        setAlignment(Pos.CENTER);
+
+        getStyleClass().addAll("container", "login-root");
 
         Label title = new Label("Вход в систему");
-        title.setStyle("-fx-font-size: 18px; -fx-font-weight: bold;");
+        title.getStyleClass().addAll("h1", "login-title");
 
         TextField login = new TextField();
+        login.getStyleClass().add("text-field");
         login.setPromptText("Логин (email)");
 
         PasswordField pass = new PasswordField();
+        pass.getStyleClass().add("password-field");
         pass.setPromptText("Пароль");
 
         Button btn = new Button("Войти");
         Label status = new Label();
+        status.getStyleClass().addAll("login-status", "msg-info");
         status.setWrapText(true);
+
+        VBox card = new VBox(10, title, login, pass, btn, status);
+        card.getStyleClass().addAll("card", "login-card");
+
+        setPadding(new Insets(24));
+        setSpacing(12);
+        setAlignment(Pos.CENTER);
+        getChildren().add(card);
+
+        // Подключаем login.css
+        getStylesheets().add(
+                getClass().getResource("/styles/login.css").toExternalForm()
+        );
 
         btn.setDefaultButton(true);
         btn.setOnAction(e -> {
