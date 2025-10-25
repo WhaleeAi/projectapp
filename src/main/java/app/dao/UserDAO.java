@@ -57,31 +57,24 @@ public class UserDAO {
     }
 
     /** Возвращает новый user_id */
-    public int insertUser(String login, String firstName, String lastName, String roleUi, String initialPassword) throws SQLException {
-        String roleDb = toDbRole(roleUi);
-
-        String sql = "INSERT INTO user (login, first_name, last_name, auth_role, password, " +
-                "password_changed, is_active, login_attempts, last_login_date) " +
-                "VALUES (?, ?, ?, ?, ?, 0, 1, 0, NULL)";
-
+    public int insertUser(String login, String firstName, String lastName,
+                          String role, String companyRole, String password) throws SQLException {
+        String sql = "INSERT INTO user (login, first_name, last_name, auth_role, role, password, password_changed) " +
+                "VALUES (?, ?, ?, ?, ?, ?, 1)";
         try (Connection c = DB.get();
              PreparedStatement ps = c.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
-
-            ps.setString(1, login.trim());
-            ps.setString(2, firstName == null ? "" : firstName);
-            ps.setString(3, lastName  == null ? "" : lastName);
-            ps.setString(4, roleDb);          // ← теперь русское ENUM-значение
-            ps.setString(5, initialPassword); // миграция на hash произойдёт при первом логине
-
-            int affected = ps.executeUpdate();
-            if (affected == 0) throw new SQLException("Не удалось добавить пользователя");
-
-            try (ResultSet keys = ps.getGeneratedKeys()) {
-                if (keys.next()) return keys.getInt(1);
-            }
-            return -1;
+            ps.setString(1, login);
+            ps.setString(2, firstName);
+            ps.setString(3, lastName);
+            ps.setString(4, role);
+            ps.setString(5, companyRole);
+            ps.setString(6, password);
+            ps.executeUpdate();
+            ResultSet rs = ps.getGeneratedKeys();
+            return rs.next() ? rs.getInt(1) : 0;
         }
     }
+
 
     public boolean updateUser(int userId, String firstName, String lastName, String roleUi, boolean active) throws SQLException {
         String roleDb = toDbRole(roleUi); // ← даёт "Администратор"/"Пользователь"

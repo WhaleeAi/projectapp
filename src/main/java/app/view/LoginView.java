@@ -20,8 +20,7 @@ public class LoginView extends VBox {
     public LoginView(Stage stage) {
         this.stage = stage;
 
-        // --- ВАЖНО: не растягивать детей по ширине
-        setFillWidth(false);                       // ⟵ ключевая строка
+        setFillWidth(false);
         setPadding(new Insets(24));
         setSpacing(12);
         setAlignment(Pos.CENTER);

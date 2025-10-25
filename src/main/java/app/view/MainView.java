@@ -10,12 +10,16 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import javafx.stage.Modality;
+import javafx.scene.layout.Priority;
 
 public class MainView extends BorderPane {
     private final User user;
+    private final Stage stage;
 
     public MainView(Stage stage, User user) {
         this.user = user;
+        this.stage = stage;
         setPadding(new Insets(16));
 
         HBox top = new HBox(16);
@@ -27,6 +31,7 @@ public class MainView extends BorderPane {
                         " | Роль: " + user.getAuthRole()
         );
         hello.getStyleClass().add("h2");
+        HBox.setHgrow(hello, Priority.ALWAYS);
 
         Button logout = new Button("Выход");
         logout.getStyleClass().add("button-secondary");
@@ -36,12 +41,18 @@ public class MainView extends BorderPane {
             stage.setScene(s);
         });
 
-        top.getChildren().addAll(hello, logout);
+        Button validation = new Button("Валидация данных");
+        validation.getStyleClass().add("button-secondary");
+        validation.setOnAction(e -> openValidationWindow());
+
+        top.getChildren().addAll(hello, validation, logout);
         setTop(top);
 
         if (isAdmin(user.getAuthRole())) {
             AdminUsersView admin = new AdminUsersView();
             setCenter(admin);
+        } else if (user.getRole().equalsIgnoreCase("Руководитель проекта")) {
+            setCenter(new ProjectManagerView());
         } else {
             VBox center = new VBox(12);
             center.getStyleClass().addAll("container", "card");
@@ -79,4 +90,19 @@ public class MainView extends BorderPane {
         return r.contains("admin") || r.contains("администратор");
     }
 
+    private void openValidationWindow() {
+        Stage validationStage = new Stage();
+        validationStage.initOwner(stage);
+        validationStage.initModality(Modality.NONE);
+        validationStage.setTitle("Валидация данных клиента");
+        validationStage.getIcons().add(
+                new Image(getClass().getResourceAsStream("/icons/logo.png"))
+        );
+
+        EmailValidationView view = new EmailValidationView();
+        Scene scene = new Scene(view, 900, 560);
+        app.MainApp.applyGlobalStyles(scene);
+        validationStage.setScene(scene);
+        validationStage.show();
+    }
 }

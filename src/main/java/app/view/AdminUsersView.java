@@ -6,9 +6,11 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.*;
+import javafx.stage.Stage;
 
 import java.sql.SQLException;
 import java.util.List;
@@ -24,6 +26,7 @@ public class AdminUsersView extends BorderPane {
     private final TextField addFirst = new TextField();
     private final TextField addLast  = new TextField();
     private final ComboBox<String> addRole = new ComboBox<>();
+    private final ComboBox<String> addCompanyRole = new ComboBox<>();
     private final PasswordField addPass = new PasswordField();
 
     // edit form
@@ -96,6 +99,12 @@ public class AdminUsersView extends BorderPane {
         addRole.setPromptText("Роль");
         addRole.getItems().addAll("Пользователь", "Администратор");
         addRole.getSelectionModel().select("Пользователь");
+        addCompanyRole.setPromptText("Роль в компании");
+        addCompanyRole.getItems().addAll(
+                "руководитель проекта",
+                "менеджер"
+        );
+        addCompanyRole.getSelectionModel().select("Разработчик");
         addPass.setPromptText("Временный пароль (обязательно)");
 
         Button addBtn = new Button("Добавить пользователя");
@@ -103,7 +112,7 @@ public class AdminUsersView extends BorderPane {
 
         VBox left = new VBox(8,
                 new Label("Добавить пользователя"),
-                addLogin, addFirst, addLast, addRole, addPass, addBtn
+                addLogin, addFirst, addLast, addRole, addCompanyRole, addPass, addBtn
         );
         left.setPadding(new Insets(8));
         left.setPrefWidth(300);
@@ -115,10 +124,10 @@ public class AdminUsersView extends BorderPane {
         // right: редактирование выбранного
         edRole.getItems().addAll("Пользователь", "Администратор");
 
-        Button saveBtn = new Button("Сохранить изменения");
+        Button saveBtn = new Button("Сохранить");
         saveBtn.setOnAction(e -> onSaveUser());
 
-        Button unlockBtn = new Button("Снять блокировку");
+        Button unlockBtn = new Button("Разблокировать");
         unlockBtn.setOnAction(e -> onUnlock());
 
         VBox right = new VBox(8,
@@ -174,6 +183,7 @@ public class AdminUsersView extends BorderPane {
         String fn    = trim(addFirst.getText());
         String ln    = trim(addLast.getText());
         String role  = addRole.getValue();
+        String companyRole = addCompanyRole.getValue();
 
         if (login.isEmpty() || pass.isEmpty()) {
             msg.setText("Логин и временный пароль обязательны для заполнения.");
@@ -184,7 +194,7 @@ public class AdminUsersView extends BorderPane {
                 msg.setText("Пользователь с указанным логином уже существует.");
                 return;
             }
-            int id = dao.insertUser(login, fn, ln, role, pass);
+            int id = dao.insertUser(login, fn, ln, role, companyRole, pass);
             if (id > 0) {
                 msg.setText("Пользователь добавлен (id=" + id + "). При первом входе будет требоваться смена пароля.");
                 clearAddForm();
@@ -245,6 +255,7 @@ public class AdminUsersView extends BorderPane {
         addLast.clear();
         addPass.clear();
         addRole.getSelectionModel().select("Пользователь");
+        addCompanyRole.getSelectionModel().select("Разработчик");
     }
 
     private static String trim(String s) { return s == null ? "" : s.trim(); }

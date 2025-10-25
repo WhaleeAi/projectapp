@@ -19,6 +19,8 @@ dependencies {
     implementation 'org.openjfx:javafx-fxml:23'
     implementation 'mysql:mysql-connector-java:8.0.33'
     implementation 'org.slf4j:slf4j-simple:2.0.16'
+    implementation 'org.apache.poi:poi-ooxml:5.2.5'                 // DOCX
+    implementation 'com.fasterxml.jackson.core:jackson-databind:2.17.1' // JSON
 }
 
 javafx {

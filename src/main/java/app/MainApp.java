@@ -20,14 +20,16 @@ public class MainApp extends Application {
         Scene scene = new Scene(root, 520, 420);
         applyGlobalStyles(scene);
 
-        stage.setTitle("Project Management — Desktop");
+        stage.setTitle("Компания заказчика");
 
-        // 👇 вот это добавляет иконку окна
         stage.getIcons().add(
                 new Image(getClass().getResourceAsStream("/icons/logo.png"))
         );
 
         stage.setScene(scene);
+
+        stage.setMinWidth(1000);
+        stage.setMinHeight(700);
         stage.show();
     }
 

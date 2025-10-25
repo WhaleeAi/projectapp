@@ -7,14 +7,17 @@ public class User {
     private String lastName;
     private String authRole;
     private boolean passwordChangeRequired;
+    private String role;
 
-    public User(int userId, String login, String firstName, String lastName, String authRole, boolean passwordChangeRequired) {
+    public User(int userId, String login, String firstName, String lastName,
+                String authRole, boolean passwordChangeRequired, String role) {
         this.userId = userId;
         this.login = login;
         this.firstName = firstName;
         this.lastName = lastName;
         this.authRole = authRole;
         this.passwordChangeRequired = passwordChangeRequired;
+        this.role = role;
     }
 
     public int getUserId() { return userId; }
@@ -22,6 +25,8 @@ public class User {
     public String getFirstName() { return firstName; }
     public String getLastName() { return lastName; }
     public String getAuthRole() { return authRole; }
+    public String getRole() { return role; }
+
     public boolean isPasswordChangeRequired() { return passwordChangeRequired; }
 
     public String getDisplayName() {

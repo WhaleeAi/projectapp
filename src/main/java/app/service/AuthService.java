@@ -33,13 +33,15 @@ public class AuthService {
                     cs.registerOutParameter(6, Types.VARCHAR);
                     cs.registerOutParameter(7, Types.TINYINT);
                     cs.execute();
+
                     String status = cs.getString(3);
                     String message = cs.getString(4);
                     int userId = cs.getInt(5);
-                    String role = cs.getString(6);
+                    String authRole = cs.getString(6);
                     boolean needChange = cs.getInt(7) == 1;
-                    User u = (userId > 0) ? fetchUserBasic(c, userId, lg, role, needChange) : null;
+                    User u = (userId > 0) ? fetchUserBasic(c, userId, lg, authRole, needChange) : null;
                     return new AuthResult(status, message, u);
+
                 }
             } else {
                 // fallback (для отладки)
@@ -61,17 +63,19 @@ public class AuthService {
         }
     }
 
-    private User fetchUserBasic(Connection c, int userId, String login, String role, boolean changeRequired) throws SQLException {
+    private User fetchUserBasic(Connection c, int userId, String login,
+                                String authRole, boolean changeRequired) throws SQLException {
         try (PreparedStatement ps = c.prepareStatement(
-                "SELECT first_name, last_name FROM user WHERE user_id=?")) {
+                "SELECT first_name, last_name, role FROM user WHERE user_id=?")) {
             ps.setInt(1, userId);
             try (ResultSet rs = ps.executeQuery()) {
-                String fn = null, ln = null;
+                String fn = null, ln = null, role = null;
                 if (rs.next()) {
                     fn = rs.getString("first_name");
                     ln = rs.getString("last_name");
+                    role = rs.getString("role"); // ← ВАЖНО
                 }
-                return new User(userId, login, fn, ln, role, changeRequired);
+                return new User(userId, login, fn, ln, authRole, changeRequired, role);
             }
         }
     }

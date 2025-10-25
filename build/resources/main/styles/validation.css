@@ -1,0 +1,60 @@
+.validation-root {
+    -fx-background-color: #ffffff;
+    -fx-spacing: 12px;
+}
+
+.validation-root .h1 {
+    -fx-font-size: 20px;
+    -fx-font-weight: 600;
+}
+
+.validation-root .text-muted {
+    -fx-text-fill: #6b7280;
+}
+
+.payload-area {
+    -fx-font-family: "JetBrains Mono", "Consolas", "monospace";
+    -fx-background-color: #f9fafb;
+    -fx-border-color: #d1d5db;
+}
+
+.validation-status {
+    -fx-font-weight: 600;
+    -fx-text-fill: #1f2937;
+}
+
+.validation-source {
+    -fx-text-fill: #6b7280;
+    -fx-font-size: 12px;
+}
+
+.validation-table {
+    -fx-border-color: #e5e7eb;
+    -fx-border-radius: 4px;
+    -fx-background-color: #ffffff;
+}
+
+.validation-table .column-header {
+    -fx-background-color: #f3f4f6;
+    -fx-font-weight: 600;
+}
+
+.table-row-cell.row-success {
+    -fx-background-color: rgba(34, 197, 94, 0.18);
+}
+
+.table-row-cell.row-fail {
+    -fx-background-color: rgba(239, 68, 68, 0.15);
+}
+
+.table-row-cell.row-success .text {
+    -fx-fill: #065f46;
+}
+
+.table-row-cell.row-fail .text {
+    -fx-fill: #7f1d1d;
+}
+
+.table-row-cell .text {
+    -fx-font-size: 13px;
+}
